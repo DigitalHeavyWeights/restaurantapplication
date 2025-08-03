@@ -1,0 +1,298 @@
+'use client';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Header } from '@/app/components/layout/Header';
+import { Card } from '@/app/components/ui/Card';
+import { Button } from '@/app/components/ui/Button';
+import { Badge } from '@/app/components/ui/Badge';
+import { ProtectedRoute } from '@/app/components/auth/ProtectedRoute';
+import { 
+  DollarSign, 
+  ShoppingCart, 
+  Users, 
+  TrendingUp, 
+  AlertTriangle, 
+  Clock,
+  ChefHat,
+  Package,
+  BarChart3,
+  Settings,
+  Plus,
+  RefreshCw
+} from 'lucide-react';
+import { apiClient } from '@/app/lib/api';
+
+interface DashboardStats {
+  todayRevenue: number;
+  todayOrders: number;
+  activeCustomers: number;
+  averageOrderValue: number;
+  lowStockItems: number;
+  pendingOrders: number;
+  preparingOrders: number;
+  readyOrders: number;
+}
+
+export default function ManagerDashboard() {
+  const router = useRouter();
+  const [stats, setStats] = useState<DashboardStats>({
+    todayRevenue: 0,
+    todayOrders: 0,
+    activeCustomers: 0,
+    averageOrderValue: 0,
+    lowStockItems: 0,
+    pendingOrders: 0,
+    preparingOrders: 0,
+    readyOrders: 0
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+
+  useEffect(() => {
+    loadDashboardData();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(loadDashboardData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      setIsLoading(true);
+      
+      // In a real app, you'd have dashboard-specific endpoints
+      // For now, we'll simulate with existing API calls
+      const [orders, lowStock] = await Promise.all([
+        apiClient.getOrders({ pageSize: 100 }), // Get recent orders
+        apiClient.getLowStockAlerts()
+      ]);
+
+      // Calculate today's stats
+      const today = new Date().toISOString().split('T')[0];
+      const todayOrders = orders.orders.filter(order => 
+        order.orderDate === today
+      );
+      
+      const todayRevenue = todayOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+      const averageOrderValue = todayOrders.length > 0 ? todayRevenue / todayOrders.length : 0;
+      
+      // Count orders by status
+      const pendingOrders = orders.orders.filter(o => o.orderStatus === 'pending').length;
+      const preparingOrders = orders.orders.filter(o => o.orderStatus === 'preparing').length;
+      const readyOrders = orders.orders.filter(o => o.orderStatus === 'ready').length;
+
+      setStats({
+        todayRevenue,
+        todayOrders: todayOrders.length,
+        activeCustomers: new Set(todayOrders.map(o => o.customerId).filter(Boolean)).size,
+        averageOrderValue,
+        lowStockItems: lowStock.length,
+        pendingOrders,
+        preparingOrders,
+        readyOrders
+      });
+      
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const quickActions = [
+    {
+      icon: Plus,
+      label: 'Add Menu Item',
+      description: 'Create new menu item',
+      action: () => router.push('/manager/menu/new'),
+      color: 'bg-blue-500'
+    },
+    {
+      icon: Package,
+      label: 'Check Inventory',
+      description: 'View stock levels',
+      action: () => router.push('/manager/inventory'),
+      color: 'bg-green-500'
+    },
+    {
+      icon: BarChart3,
+      label: 'View Reports',
+      description: 'Sales & analytics',
+      action: () => router.push('/manager/reports'),
+      color: 'bg-purple-500'
+    },
+    {
+      icon: Settings,
+      label: 'Settings',
+      description: 'Restaurant settings',
+      action: () => router.push('/manager/settings'),
+      color: 'bg-gray-500'
+    }
+  ];
+
+  return (
+    <ProtectedRoute requiredRoles={['Manager']}>
+      <div className="pb-20">
+        <Header 
+          title="Manager Dashboard" 
+          actions={
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={loadDashboardData}
+              isLoading={isLoading}
+              className="p-2"
+            >
+              <RefreshCw className="w-5 h-5" />
+            </Button>
+          }
+        />
+        
+        <div className="p-4 space-y-6">
+          {/* Revenue & Orders Overview */}
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="text-center bg-green-50 border-green-200">
+              <div className="flex items-center justify-center mb-2">
+                <DollarSign className="w-6 h-6 text-green-600" />
+              </div>
+              <p className="text-sm text-green-700">Today's Revenue</p>
+              <p className="text-2xl font-bold text-green-800">
+                ${stats.todayRevenue.toFixed(2)}
+              </p>
+            </Card>
+            
+            <Card className="text-center bg-blue-50 border-blue-200">
+              <div className="flex items-center justify-center mb-2">
+                <ShoppingCart className="w-6 h-6 text-blue-600" />
+              </div>
+              <p className="text-sm text-blue-700">Today's Orders</p>
+              <p className="text-2xl font-bold text-blue-800">
+                {stats.todayOrders}
+              </p>
+            </Card>
+          </div>
+
+          {/* Secondary Stats */}
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <Users className="w-5 h-5 text-neutral-600" />
+              </div>
+              <p className="text-sm text-neutral-600">Active Customers</p>
+              <p className="text-lg font-bold text-neutral-900">
+                {stats.activeCustomers}
+              </p>
+            </Card>
+            
+            <Card className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <TrendingUp className="w-5 h-5 text-neutral-600" />
+              </div>
+              <p className="text-sm text-neutral-600">Avg Order Value</p>
+              <p className="text-lg font-bold text-neutral-900">
+                ${stats.averageOrderValue.toFixed(2)}
+              </p>
+            </Card>
+          </div>
+
+          {/* Alerts & Status */}
+          <div className="grid grid-cols-1 gap-3">
+            {/* Low Stock Alert */}
+            {stats.lowStockItems > 0 && (
+              <Card 
+                className="bg-red-50 border-red-200 cursor-pointer"
+                onClick={() => router.push('/manager/inventory?filter=low-stock')}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <AlertTriangle className="w-6 h-6 text-red-600" />
+                    <div>
+                      <p className="font-medium text-red-800">Low Stock Alert</p>
+                      <p className="text-sm text-red-600">
+                        {stats.lowStockItems} items need restocking
+                      </p>
+                    </div>
+                  </div>
+                  <Badge variant="danger" size="sm">
+                    {stats.lowStockItems}
+                  </Badge>
+                </div>
+              </Card>
+            )}
+
+            {/* Kitchen Status */}
+            <Card>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <ChefHat className="w-5 h-5 text-neutral-600" />
+                  <span className="font-medium">Kitchen Status</span>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => router.push('/employee/kitchen')}
+                >
+                  View Queue
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-3">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-yellow-600">
+                    {stats.pendingOrders}
+                  </div>
+                  <div className="text-xs text-neutral-600">Pending</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-blue-600">
+                    {stats.preparingOrders}
+                  </div>
+                  <div className="text-xs text-neutral-600">Preparing</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600">
+                    {stats.readyOrders}
+                  </div>
+                  <div className="text-xs text-neutral-600">Ready</div>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Quick Actions */}
+          <Card>
+            <h3 className="text-lg font-semibold text-neutral-900 mb-4">Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {quickActions.map((action, index) => {
+                const Icon = action.icon;
+                return (
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    className="h-20 flex-col space-y-1 border border-neutral-200 hover:border-neutral-300"
+                    onClick={action.action}
+                  >
+                    <div className={`w-8 h-8 ${action.color} rounded-lg flex items-center justify-center`}>
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-sm font-medium">{action.label}</span>
+                    <span className="text-xs text-neutral-500">{action.description}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </Card>
+
+          {/* Last Updated */}
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-1 text-xs text-neutral-500">
+              <Clock className="w-3 h-3" />
+              <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+}
