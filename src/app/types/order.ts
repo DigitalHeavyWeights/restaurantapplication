@@ -50,3 +50,32 @@ export interface CartItem extends CreateOrderItem {
   lineTotal: number;
 }
 
+// Kitchen-specific order interface
+export interface KitchenOrder {
+  orderId: number;
+  customerName: string;
+  orderDate: string;
+  orderTime: string;
+  orderType: 'dine-in' | 'takeout' | 'delivery' | 'online';
+  orderStatus: 'pending' | 'preparing' | 'ready' | 'completed' | 'cancelled';
+  estimatedPrepTime: number;
+  orderItems: KitchenOrderItem[];
+}
+
+export interface KitchenOrderItem {
+  menuItemName: string;
+  quantity: number;
+  specialInstructions?: string;
+}
+
+// You'll need to import MenuItem from your menu types
+interface MenuItem {
+  menuItemId: number;
+  menuId: number;
+  itemName: string;
+  description?: string;
+  price: number;
+  category: string;
+  isAvailable: boolean;
+  prepTimeMinutes?: number;
+}

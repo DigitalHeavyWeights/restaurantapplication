@@ -24,7 +24,7 @@ export const KitchenTicket: React.FC<KitchenTicketProps> = ({ order, onStatusUpd
     }
   };
 
-  const getStatusActions = (status: string) => {
+const getStatusActions = (status: string) => {
     switch (status.toLowerCase()) {
       case 'preparing':
         return [
@@ -32,13 +32,13 @@ export const KitchenTicket: React.FC<KitchenTicketProps> = ({ order, onStatusUpd
         ];
       case 'ready':
         return [
-          { label: 'Complete', action: () => handleStatusUpdate('completed'), variant: 'success' as const }
+          { label: 'Complete', action: () => handleStatusUpdate('completed'), variant: 'primary' as const } // Changed from 'success' to 'primary'
         ];
       default:
         return [];
     }
   };
-
+  
   const handleStatusUpdate = async (newStatus: string) => {
     try {
       await onStatusUpdate(order.orderId, newStatus);

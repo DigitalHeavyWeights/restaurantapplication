@@ -1,21 +1,27 @@
 'use client'
-
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, Menu, ShoppingCart, User, ChefHat, BarChart3 } from 'lucide-react';
+import { Home, Menu, ShoppingCart, User, ChefHat, BarChart3, LucideIcon } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import { Badge } from '../../components/ui/Badge';
+
+// Define the navigation item type
+interface NavigationItem {
+  icon: LucideIcon;
+  label: string;
+  path: string;
+  badge?: number;
+}
 
 export const MobileNav: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuthStore();
   const { getTotalItems } = useCartStore();
-
   const cartItemCount = getTotalItems();
 
-  const getNavigationItems = () => {
+  const getNavigationItems = (): NavigationItem[] => {
     if (!user) {
       return [
         { icon: Home, label: 'Home', path: '/' },
@@ -24,7 +30,7 @@ export const MobileNav: React.FC = () => {
       ];
     }
 
-    const baseItems = [
+    const baseItems: NavigationItem[] = [
       { icon: Home, label: 'Home', path: '/' },
       { icon: Menu, label: 'Menu', path: '/menu' }
     ];
@@ -32,9 +38,9 @@ export const MobileNav: React.FC = () => {
     if (user.roles.includes('Customer')) {
       return [
         ...baseItems,
-        { 
-          icon: ShoppingCart, 
-          label: 'Cart', 
+        {
+          icon: ShoppingCart,
+          label: 'Cart',
           path: '/order/cart',
           badge: cartItemCount > 0 ? cartItemCount : undefined
         },
@@ -69,7 +75,7 @@ export const MobileNav: React.FC = () => {
         {navigationItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
-          
+         
           return (
             <button
               key={item.path}
@@ -82,7 +88,7 @@ export const MobileNav: React.FC = () => {
             >
               <div className="relative">
                 <Icon className="w-6 h-6 mb-1" />
-                {item.badge && (
+                {item.badge && item.badge > 0 && (
                   <div className="absolute -top-2 -right-2">
                     <Badge variant="danger" size="sm" className="min-w-[20px] h-5 text-xs">
                       {item.badge > 99 ? '99+' : item.badge}
@@ -98,4 +104,3 @@ export const MobileNav: React.FC = () => {
     </div>
   );
 };
-

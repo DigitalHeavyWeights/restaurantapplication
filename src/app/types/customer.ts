@@ -1,3 +1,5 @@
+import { MenuItem } from './menu';
+
 export interface Customer {
   customerId: number;
   firstName: string;

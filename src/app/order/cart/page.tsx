@@ -11,6 +11,7 @@ import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 import { useCartStore } from '../../store/cartStore';
 import { useUIStore } from '../../store/uiStore';
 import { ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
+import { TextArea } from '../../components/ui/TextArea';
 
 export default function CartPage() {
   const router = useRouter();
@@ -151,14 +152,13 @@ export default function CartPage() {
               </p>
             </div>
             
-            <Input
-              label="Special Instructions"
-              value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
-              placeholder="e.g., No onions, extra sauce, well done..."
-              multiline
-              rows={3}
-            />
+            <TextArea
+  label="Special Instructions"
+  value={instructions}
+  onChange={(e) => setInstructions(e.target.value)}
+  placeholder="e.g., No onions, extra sauce, well done..."
+  rows={3}
+/>
             
             <div className="flex space-x-3">
               <Button

@@ -19,15 +19,27 @@ import { MenuCarousel } from './components/menu/MenuCarousel';
 
 
 export default function HomePage() {
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const { user } = useAuthStore();
   const { toggleCart, getTotalItems } = useCartStore();
   const [featuredItems, setFeaturedItems] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     loadFeaturedItems();
   }, []);
+
 
   const loadFeaturedItems = async () => {
     try {
@@ -199,7 +211,7 @@ export default function HomePage() {
         className="absolute inset-0 bg-center bg-no-repeat"
         style={{
           backgroundImage: 'url(/images/HyenasDealImage.png)',
-          backgroundSize: window.innerWidth >= 768 ? '100% 100%' : 'cover'
+          backgroundSize: isMobile ? 'cover' : '100% 100%'
         }}
       />
       
@@ -398,7 +410,7 @@ export default function HomePage() {
   className="absolute inset-0 bg-center bg-no-repeat w-full h-full"
   style={{
     backgroundImage: 'url(/images/hyenasden.png)',
-    backgroundSize: window.innerWidth < 768 ? 'cover' : '100% 100%'
+    backgroundSize: isMobile ? 'cover' : '100% 100%'
   }}
 />
   

@@ -9,12 +9,24 @@ import { Card } from '../../components/ui/Card';
 import { useAuthStore } from '../../store/authStore';
 import { useUIStore } from '../../store/uiStore';
 
+// Define the role type
+type UserRole = "Customer" | "Employee" | "Manager";
+
+// Define the form data interface
+interface RegisterFormData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+}
+
 export const RegisterForm: React.FC = () => {
   const router = useRouter();
   const { register, isLoading, error } = useAuthStore();
   const { addToast } = useUIStore();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     email: '',
     password: '',
     firstName: '',
@@ -42,9 +54,10 @@ export const RegisterForm: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: name === 'role' ? value as UserRole : value
     });
   };
 
@@ -159,4 +172,3 @@ export const RegisterForm: React.FC = () => {
     </Card>
   );
 };
-

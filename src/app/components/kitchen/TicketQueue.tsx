@@ -1,176 +1,197 @@
-import React, { useEffect, useState } from 'react';
-import { RefreshCw, Filter, AlertCircle } from 'lucide-react';
+import React from 'react';
+import { Clock, User, MapPin, ChefHat } from 'lucide-react';
 import { KitchenOrder } from '../../types/order';
-import { KitchenTicket } from './KitchenTicket';
-import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { useOrderStore } from '../../store/orderStore';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import { useUIStore } from '../../store/uiStore';
+
+// Define the order status type
+type OrderStatus = 'pending' | 'preparing' | 'ready' | 'completed' | 'cancelled';
 
 interface TicketQueueProps {
   autoRefresh?: boolean;
   refreshInterval?: number;
+  order: KitchenOrder;
+  onStatusUpdate: (orderId: number, status: OrderStatus) => Promise<void>;
 }
 
-export const TicketQueue: React.FC<TicketQueueProps> = ({
-  autoRefresh = true,
-  refreshInterval = 30000 // 30 seconds
-}) => {
-  const { kitchenQueue, isLoading, loadKitchenQueue, updateOrderStatus } = useOrderStore();
+
+
+export const TicketQueue: React.FC<TicketQueueProps> = ({  autoRefresh, refreshInterval, order, onStatusUpdate }) => {
   const { addToast } = useUIStore();
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  useEffect(() => {
-    loadKitchenQueue();
-    
-    if (autoRefresh) {
-      const interval = setInterval(() => {
-        loadKitchenQueue();
-      }, refreshInterval);
-      
-      return () => clearInterval(interval);
+  
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'preparing': return 'warning';
+      case 'ready': return 'success';
+      case 'completed': return 'neutral';
+      default: return 'primary';
     }
-  }, [autoRefresh, refreshInterval, loadKitchenQueue]);
+  };
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
+  const getStatusActions = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'preparing':
+        return [
+          { label: 'Mark Ready', action: () => handleStatusUpdate('ready'), variant: 'primary' as const }
+        ];
+      case 'ready':
+        return [
+          { label: 'Complete', action: () => handleStatusUpdate('completed'), variant: 'primary' as const }
+        ];
+      default:
+        return [];
+    }
+  };
+
+  const handleStatusUpdate = async (newStatus: OrderStatus) => { // Changed to OrderStatus
     try {
-      await loadKitchenQueue();
+      await onStatusUpdate(order.orderId, newStatus);
       addToast({
         type: 'success',
-        title: 'Queue Updated',
-        message: 'Kitchen queue refreshed successfully'
+        title: 'Order Updated',
+        message: `Order #${order.orderId} marked as ${newStatus}`
       });
     } catch (error) {
       addToast({
         type: 'error',
-        title: 'Refresh Failed',
-        message: 'Failed to refresh kitchen queue'
+        title: 'Update Failed',
+        message: 'Failed to update order status'
       });
-    } finally {
-      setIsRefreshing(false);
     }
   };
 
-  const filteredOrders = statusFilter === 'all' 
-    ? kitchenQueue 
-    : kitchenQueue.filter(order => order.orderStatus.toLowerCase() === statusFilter.toLowerCase());
-
-  const getOrderCounts = () => {
-    const counts = kitchenQueue.reduce((acc, order) => {
-      const status = order.orderStatus.toLowerCase();
-      acc[status] = (acc[status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    return {
-      preparing: counts.preparing || 0,
-      ready: counts.ready || 0,
-      total: kitchenQueue.length
-    };
+  // Rest of your component remains the same...
+  const formatTime = (timeString: string) => {
+    const time = new Date(`2000-01-01T${timeString}`);
+    return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const counts = getOrderCounts();
-  const statusOptions = [
-    { value: 'all', label: 'All Orders', count: counts.total },
-    { value: 'preparing', label: 'Preparing', count: counts.preparing },
-    { value: 'ready', label: 'Ready', count: counts.ready }
-  ];
+  const getElapsedTime = (orderTime: string) => {
+    const orderDate = new Date(`2000-01-01T${orderTime}`);
+    const now = new Date();
+    const currentTime = new Date(`2000-01-01T${now.toTimeString().split(' ')[0]}`);
+    const diffMs = currentTime.getTime() - orderDate.getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    return diffMins > 0 ? `${diffMins}m ago` : 'Just now';
+  };
 
-  if (isLoading && kitchenQueue.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin text-primary-500 mx-auto mb-2" />
-          <p className="text-neutral-600">Loading kitchen queue...</p>
-        </div>
-      </div>
-    );
-  }
+  const actions = getStatusActions(order.orderStatus);
 
   return (
-    <div className="space-y-4">
+    <Card 
+      className="mb-3 border-l-4 border-l-primary-500" 
+      padding="none"
+      shadow="md"
+    >
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-900">Kitchen Queue</h1>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleRefresh}
-          isLoading={isRefreshing}
-          className="p-2"
-        >
-          <RefreshCw className="w-5 h-5" />
-        </Button>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white p-3 rounded-xl border border-neutral-200 text-center">
-          <div className="text-2xl font-bold text-neutral-900">{counts.total}</div>
-          <div className="text-sm text-neutral-600">Total Orders</div>
-        </div>
-        <div className="bg-yellow-50 p-3 rounded-xl border border-yellow-200 text-center">
-          <div className="text-2xl font-bold text-yellow-800">{counts.preparing}</div>
-          <div className="text-sm text-yellow-600">Preparing</div>
-        </div>
-        <div className="bg-green-50 p-3 rounded-xl border border-green-200 text-center">
-          <div className="text-2xl font-bold text-green-800">{counts.ready}</div>
-          <div className="text-sm text-green-600">Ready</div>
+      <div className="px-4 py-3 bg-neutral-50 border-b border-neutral-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              <ChefHat className="w-4 h-4 text-primary-500" />
+              <span className="font-bold text-lg text-neutral-900">
+                #{order.orderId}
+              </span>
+            </div>
+            <Badge variant={getStatusColor(order.orderStatus)} size="sm">
+              {order.orderStatus.toUpperCase()}
+            </Badge>
+          </div>
+          
+          <div className="text-right">
+            <div className="flex items-center text-sm text-neutral-600">
+              <Clock className="w-4 h-4 mr-1" />
+              {formatTime(order.orderTime)}
+            </div>
+            <div className="text-xs text-neutral-500">
+              {getElapsedTime(order.orderTime)}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex space-x-2 overflow-x-auto pb-2">
-        {statusOptions.map((option) => (
-          <button
-            key={option.value}
-            onClick={() => setStatusFilter(option.value)}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
-              statusFilter === option.value
-                ? 'bg-primary-500 text-white'
-                : 'bg-white text-neutral-600 border border-neutral-200 hover:bg-neutral-50'
-            }`}
-          >
-            <span>{option.label}</span>
-            {option.count > 0 && (
-              <Badge 
-                variant={statusFilter === option.value ? 'secondary' : 'neutral'} 
-                size="sm"
-              >
-                {option.count}
-              </Badge>
-            )}
-          </button>
-        ))}
+      {/* Customer & Order Info */}
+      <div className="px-4 py-3 border-b border-neutral-200">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center space-x-2">
+            <User className="w-4 h-4 text-neutral-500" />
+            <span className="font-medium text-neutral-900">
+              {order.customerName}
+            </span>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <MapPin className="w-4 h-4 text-neutral-500" />
+            <Badge variant="secondary" size="sm">
+              {order.orderType.toUpperCase()}
+            </Badge>
+          </div>
+        </div>
+        
+        {order.estimatedPrepTime > 0 && (
+          <div className="flex items-center text-sm text-neutral-600">
+            <Clock className="w-4 h-4 mr-1" />
+            <span>Est. prep time: {order.estimatedPrepTime} min</span>
+          </div>
+        )}
       </div>
 
-      {/* Orders List */}
-      {filteredOrders.length === 0 ? (
-        <div className="text-center py-12">
-          <AlertCircle className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
-          <h3 className="text-lg font-medium text-neutral-900 mb-1">
-            {statusFilter === 'all' ? 'No orders in queue' : `No ${statusFilter} orders`}
-          </h3>
-          <p className="text-neutral-600">
-            {statusFilter === 'all' 
-              ? 'Orders will appear here as they come in' 
-              : `Switch to "All Orders" to see the complete queue`
-            }
-          </p>
-        </div>
-      ) : (
+      {/* Order Items */}
+      <div className="px-4 py-3">
         <div className="space-y-3">
-          {filteredOrders.map((order) => (
-            <KitchenTicket
-              key={order.orderId}
-              order={order}
-              onStatusUpdate={updateOrderStatus}
-            />
+          {order.orderItems.map((item, index) => (
+            <div key={index} className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center space-x-2">
+                  <span className="bg-primary-100 text-primary-800 text-sm font-bold px-2 py-1 rounded-lg min-w-[24px] text-center">
+                    {item.quantity}
+                  </span>
+                  <span className="font-medium text-neutral-900">
+                    {item.menuItemName}
+                  </span>
+                </div>
+                
+                {item.specialInstructions && (
+                  <div className="mt-2 ml-8">
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2">
+                      <div className="flex items-start space-x-2">
+                        <div className="text-yellow-600 text-xs font-medium uppercase tracking-wide">
+                          Special Instructions
+                        </div>
+                      </div>
+                      <p className="text-sm text-yellow-800 mt-1">
+                        {item.specialInstructions}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           ))}
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      {actions.length > 0 && (
+        <div className="px-4 py-3 bg-neutral-50 border-t border-neutral-200">
+          <div className="flex space-x-2">
+            {actions.map((action, index) => (
+              <Button
+                key={index}
+                variant={action.variant}
+                size="sm"
+                onClick={action.action}
+                fullWidth
+                className="font-medium"
+              >
+                {action.label}
+              </Button>
+            ))}
+          </div>
+        </div>
       )}
-    </div>
+    </Card>
   );
 };
