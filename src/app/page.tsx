@@ -438,7 +438,7 @@ useEffect(() => {
           </div>
           <div className="flex items-center space-x-4 text-white">
             <Clock className="w-6 h-6 text-accent-400" />
-            <span className="text-lg font-bold">Mon-Sun: 11AM - 10PM</span>
+            <span className="text-lg font-bold">Mon-Sun: 11AM - 11PM</span>
           </div>
         </div>
         <div className="flex space-x-4">
