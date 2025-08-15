@@ -19,6 +19,7 @@ interface TicketQueueProps {
 
 
 export const TicketQueue: React.FC<TicketQueueProps> = ({  autoRefresh, refreshInterval, order, onStatusUpdate }) => {
+   console.log('TicketQueue received order:', order);
   const { addToast } = useUIStore();
 
     if (!order) return <div>No order data</div>;
