@@ -20,6 +20,8 @@ interface TicketQueueProps {
 
 export const TicketQueue: React.FC<TicketQueueProps> = ({  autoRefresh, refreshInterval, order, onStatusUpdate }) => {
   const { addToast } = useUIStore();
+
+    if (!order) return <div>No order data</div>;
   
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
