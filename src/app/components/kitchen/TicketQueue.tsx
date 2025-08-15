@@ -22,7 +22,10 @@ export const TicketQueue: React.FC<TicketQueueProps> = ({  autoRefresh, refreshI
    console.log('TicketQueue received order:', order);
   const { addToast } = useUIStore();
 
-    if (!order) return <div>No order data</div>;
+  
+  if (!order || !order.orderStatus) {
+    return <div>Invalid order data</div>;
+  }
   
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
