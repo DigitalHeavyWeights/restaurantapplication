@@ -1,25 +1,38 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Header } from '../../components/layout/Header';
 import { TicketQueue } from '../../components/kitchen/TicketQueue';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
-import { useOrderStore } from '../../store/orderStore'; // Add this import
+import { useOrderStore } from '../../store/orderStore';
 
 export default function KitchenPage() {
-  const { kitchenQueue, updateOrderStatus } = useOrderStore(); // Add this line
+  const { kitchenQueue, updateOrderStatus, loadKitchenQueue, isLoading } = useOrderStore();
+
+  useEffect(() => {
+    loadKitchenQueue();
+  }, []);
 
   return (
     <ProtectedRoute requiredRoles={['Employee', 'Manager']}>
       <div className="pb-20">
         <Header title="Kitchen Queue" showNotifications />
-       
+        
         <div className="p-4">
-          <TicketQueue 
-            order={kitchenQueue[0]}
-            onStatusUpdate={updateOrderStatus}
-            autoRefresh={true}
-            refreshInterval={15000}
-          />
+          {isLoading ? (
+            <div>Loading orders...</div>
+          ) : kitchenQueue.length > 0 ? (
+            kitchenQueue.map((order) => (
+              <TicketQueue
+                key={order.orderId}
+                order={order}
+                onStatusUpdate={updateOrderStatus}
+                autoRefresh={true}
+                refreshInterval={15000}
+              />
+            ))
+          ) : (
+            <div>No orders in queue</div>
+          )}
         </div>
       </div>
     </ProtectedRoute>
