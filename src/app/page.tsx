@@ -111,7 +111,6 @@ useEffect(() => {
   
   {/* Hero Content - Centered and Balanced */}
   <div className="relative z-20 flex-1 flex items-center justify-center py-20 sm:py-24 lg:py-32">
-    <p className="text-red-600 text-2xl font-bold">TEST DEPLOY: {new Date().toISOString()}</p>
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
       <div className="grid md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-12 items-start relative">
         {/* Black background only behind the grid content area on desktop */}
