@@ -21,21 +21,21 @@ useEffect(() => {
         <Header title="Kitchen Queue" showNotifications />
         
         <div className="p-4">
-          {isLoading ? (
-            <div>Loading orders...</div>
-          ) : kitchenQueue.length > 0 ? (
-            kitchenQueue.map((order) => (
-              <TicketQueue
-                key={order.orderId}
-                order={order}
-                onStatusUpdate={updateOrderStatus}
-                autoRefresh={true}
-                refreshInterval={15000}
-              />
-            ))
-          ) : (
-            <div>No orders in queue</div>
-          )}
+    {isLoading ? (
+  <div>Loading orders...</div>
+) : kitchenQueue.length > 0 ? (
+  kitchenQueue.filter(order => order != null).map((order) => (  // Add filter
+    <TicketQueue
+      key={order.orderId}
+      order={order}
+      onStatusUpdate={updateOrderStatus}
+      autoRefresh={true}
+      refreshInterval={15000}
+    />
+  ))
+) : (
+  <div>No orders in queue</div>
+)}
         </div>
       </div>
     </ProtectedRoute>
