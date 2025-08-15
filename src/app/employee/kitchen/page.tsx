@@ -8,9 +8,12 @@ import { useOrderStore } from '../../store/orderStore';
 export default function KitchenPage() {
   const { kitchenQueue, updateOrderStatus, loadKitchenQueue, isLoading } = useOrderStore();
 
-  useEffect(() => {
-    loadKitchenQueue();
-  }, []);
+useEffect(() => {
+  console.log('About to load kitchen queue...');
+  loadKitchenQueue().catch(error => {
+    console.error('Kitchen queue error:', error);
+  });
+}, []);
 
   return (
     <ProtectedRoute requiredRoles={['Employee', 'Manager']}>
