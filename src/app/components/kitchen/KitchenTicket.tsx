@@ -4,16 +4,21 @@ import { KitchenOrder } from '../../types/order';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
-import { useOrderStore } from '../../store/orderStore';
-import { useUIStore } from '../../store/uiStore';
+
+// Define the order status type
+type OrderStatus = 'pending' | 'preparing' | 'ready' | 'completed' | 'cancelled';
 
 interface KitchenTicketProps {
   order: KitchenOrder;
-  onStatusUpdate: (orderId: number, status: string) => void;
+  onStatusUpdate: (orderId: number, status: OrderStatus) => Promise<void>;
 }
 
 export const KitchenTicket: React.FC<KitchenTicketProps> = ({ order, onStatusUpdate }) => {
-  const { addToast } = useUIStore();
+  // Early return if order is not valid
+  if (!order || !order.orderStatus || !order.orderId) {
+    console.warn('KitchenTicket received invalid order:', order);
+    return null;
+  }
   
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -24,7 +29,7 @@ export const KitchenTicket: React.FC<KitchenTicketProps> = ({ order, onStatusUpd
     }
   };
 
-const getStatusActions = (status: string) => {
+  const getStatusActions = (status: string) => {
     switch (status.toLowerCase()) {
       case 'preparing':
         return [
@@ -32,42 +37,45 @@ const getStatusActions = (status: string) => {
         ];
       case 'ready':
         return [
-          { label: 'Complete', action: () => handleStatusUpdate('completed'), variant: 'primary' as const } // Changed from 'success' to 'primary'
+          { label: 'Complete', action: () => handleStatusUpdate('completed'), variant: 'primary' as const }
         ];
       default:
         return [];
     }
   };
   
-  const handleStatusUpdate = async (newStatus: string) => {
+  const handleStatusUpdate = async (newStatus: OrderStatus) => {
     try {
       await onStatusUpdate(order.orderId, newStatus);
-      addToast({
-        type: 'success',
-        title: 'Order Updated',
-        message: `Order #${order.orderId} marked as ${newStatus}`
-      });
     } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Update Failed',
-        message: 'Failed to update order status'
-      });
+      console.error('Failed to update order status:', error);
     }
   };
 
   const formatTime = (timeString: string) => {
-    const time = new Date(`2000-01-01T${timeString}`);
-    return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (!timeString) return 'N/A';
+    try {
+      const time = new Date(`2000-01-01T${timeString}`);
+      return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return timeString;
+    }
   };
 
   const getElapsedTime = (orderTime: string) => {
-    const orderDate = new Date(`2000-01-01T${orderTime}`);
-    const now = new Date();
-    const currentTime = new Date(`2000-01-01T${now.toTimeString().split(' ')[0]}`);
-    const diffMs = currentTime.getTime() - orderDate.getTime();
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    return diffMins > 0 ? `${diffMins}m ago` : 'Just now';
+    if (!orderTime) return 'N/A';
+    try {
+      const orderDate = new Date(`2000-01-01T${orderTime}`);
+      const now = new Date();
+      const currentTime = new Date(`2000-01-01T${now.toTimeString().split(' ')[0]}`);
+      const diffMs = currentTime.getTime() - orderDate.getTime();
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      return diffMins > 0 ? `${diffMins}m ago` : 'Just now';
+    } catch (error) {
+      console.error('Error calculating elapsed time:', error);
+      return 'N/A';
+    }
   };
 
   const actions = getStatusActions(order.orderStatus);
@@ -111,14 +119,14 @@ const getStatusActions = (status: string) => {
           <div className="flex items-center space-x-2">
             <User className="w-4 h-4 text-neutral-500" />
             <span className="font-medium text-neutral-900">
-              {order.customerName}
+              {order.customerName || 'Walk-in'}
             </span>
           </div>
           
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4 text-neutral-500" />
             <Badge variant="secondary" size="sm">
-              {order.orderType.toUpperCase()}
+              {(order.orderType || 'unknown').toUpperCase()}
             </Badge>
           </div>
         </div>
@@ -134,15 +142,15 @@ const getStatusActions = (status: string) => {
       {/* Order Items */}
       <div className="px-4 py-3">
         <div className="space-y-3">
-          {order.orderItems.map((item, index) => (
+          {(order.orderItems || []).map((item, index) => (
             <div key={index} className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
                   <span className="bg-primary-100 text-primary-800 text-sm font-bold px-2 py-1 rounded-lg min-w-[24px] text-center">
-                    {item.quantity}
+                    {item.quantity || 0}
                   </span>
                   <span className="font-medium text-neutral-900">
-                    {item.menuItemName}
+                    {item.menuItemName || 'Unknown Item'}
                   </span>
                 </div>
                 
@@ -188,4 +196,3 @@ const getStatusActions = (status: string) => {
     </Card>
   );
 };
-
