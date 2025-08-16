@@ -89,48 +89,8 @@ export default function ManagerDashboard() {
         />
         
         <div className="p-4 space-y-6">
-          {/* Revenue & Orders Overview */}
-          <div className="grid grid-cols-2 gap-3">
-           
-
-            {/* Kitchen Status */}
-            <Card>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <ChefHat className="w-5 h-5 text-neutral-600" />
-                  <span className="font-medium">Kitchen Status</span>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => router.push('/employee/kitchen')}
-                >
-                  View Queue
-                </Button>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-3">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-yellow-600">
-                    {stats.pendingOrders}
-                  </div>
-                  <div className="text-xs text-neutral-600">Pending</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-blue-600">
-                    {stats.preparingOrders}
-                  </div>
-                  <div className="text-xs text-neutral-600">Preparing</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-green-600">
-                    {stats.readyOrders}
-                  </div>
-                  <div className="text-xs text-neutral-600">Ready</div>
-                </div>
-              </div>
-            </Card>
-          </div>
+       
+        
 
           {/* Quick Actions */}
           <Card>
