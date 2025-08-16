@@ -52,7 +52,7 @@ export const MobileNav: React.FC = () => {
       return [
         ...baseItems,
         { icon: ChefHat, label: 'Kitchen', path: '/employee/kitchen' },
-        { icon: BarChart3, label: 'Orders', path: '/employee/orders' },
+       
         { icon: User, label: 'Dashboard', path: '/employee/dashboard' }
       ];
     }

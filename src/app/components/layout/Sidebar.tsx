@@ -34,7 +34,6 @@ export const Sidebar: React.FC = () => {
         ...baseItems,
         { icon: BarChart3, label: 'Dashboard', path: '/manager/dashboard' },
         { icon: ChefHat, label: 'Kitchen', path: '/employee/kitchen' },
-        { icon: ShoppingCart, label: 'Orders', path: '/manager/orders' },
         { icon: Menu, label: 'Menu Management', path: '/manager/dashboard/menu' },
         { icon: Package, label: 'Inventory', path: '/manager/inventory' },
         { icon: Settings, label: 'Settings', path: '/manager/settings' }
@@ -46,7 +45,6 @@ export const Sidebar: React.FC = () => {
         ...baseItems,
         { icon: BarChart3, label: 'Dashboard', path: '/employee/dashboard' },
         { icon: ChefHat, label: 'Kitchen', path: '/employee/kitchen' },
-        { icon: ShoppingCart, label: 'Orders', path: '/employee/orders' },
         { icon: Settings, label: 'Settings', path: '/employee/settings' }
       ];
     }
