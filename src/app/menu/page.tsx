@@ -41,12 +41,7 @@ export default function MenuPage() {
         
         {/* Content */}
         <div className="relative z-10 pt-6 pb-12">
-          <Header
-            title=""
-            showSearch
-            onSearch={() => {/* Implement search */}}
-          />
-          
+        
           {/* Hero Content */}
           <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 text-center mt-8">
             {/* Pack Badge */}

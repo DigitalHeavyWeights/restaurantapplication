@@ -48,57 +48,7 @@ export default function ManagerDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
-  useEffect(() => {
-    loadDashboardData();
-    
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(loadDashboardData, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
-  const loadDashboardData = async () => {
-    try {
-      setIsLoading(true);
-      
-      // In a real app, you'd have dashboard-specific endpoints
-      // For now, we'll simulate with existing API calls
-      const [orders, lowStock] = await Promise.all([
-        apiClient.getOrders({ pageSize: 100 }), // Get recent orders
-        apiClient.getLowStockAlerts()
-      ]);
-
-      // Calculate today's stats
-      const today = new Date().toISOString().split('T')[0];
-      const todayOrders = orders.orders.filter(order => 
-        order.orderDate === today
-      );
-      
-      const todayRevenue = todayOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-      const averageOrderValue = todayOrders.length > 0 ? todayRevenue / todayOrders.length : 0;
-      
-      // Count orders by status
-      const pendingOrders = orders.orders.filter(o => o.orderStatus === 'pending').length;
-      const preparingOrders = orders.orders.filter(o => o.orderStatus === 'preparing').length;
-      const readyOrders = orders.orders.filter(o => o.orderStatus === 'ready').length;
-
-      setStats({
-        todayRevenue,
-        todayOrders: todayOrders.length,
-        activeCustomers: new Set(todayOrders.map(o => o.customerId).filter(Boolean)).size,
-        averageOrderValue,
-        lowStockItems: lowStock.length,
-        pendingOrders,
-        preparingOrders,
-        readyOrders
-      });
-      
-      setLastUpdated(new Date());
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const quickActions = [
     {
@@ -136,17 +86,6 @@ export default function ManagerDashboard() {
       <div className="pb-20">
         <Header 
           title="Manager Dashboard" 
-          actions={
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={loadDashboardData}
-              isLoading={isLoading}
-              className="p-2"
-            >
-              <RefreshCw className="w-5 h-5" />
-            </Button>
-          }
         />
         
         <div className="p-4 space-y-6">
