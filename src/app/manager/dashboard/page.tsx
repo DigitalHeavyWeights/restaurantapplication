@@ -91,74 +91,7 @@ export default function ManagerDashboard() {
         <div className="p-4 space-y-6">
           {/* Revenue & Orders Overview */}
           <div className="grid grid-cols-2 gap-3">
-            <Card className="text-center bg-green-50 border-green-200">
-              <div className="flex items-center justify-center mb-2">
-                <DollarSign className="w-6 h-6 text-green-600" />
-              </div>
-              <p className="text-sm text-green-700">Today's Revenue</p>
-              <p className="text-2xl font-bold text-green-800">
-                ${stats.todayRevenue.toFixed(2)}
-              </p>
-            </Card>
-            
-            <Card className="text-center bg-blue-50 border-blue-200">
-              <div className="flex items-center justify-center mb-2">
-                <ShoppingCart className="w-6 h-6 text-blue-600" />
-              </div>
-              <p className="text-sm text-blue-700">Today's Orders</p>
-              <p className="text-2xl font-bold text-blue-800">
-                {stats.todayOrders}
-              </p>
-            </Card>
-          </div>
-
-          {/* Secondary Stats */}
-          <div className="grid grid-cols-2 gap-3">
-            <Card className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Users className="w-5 h-5 text-neutral-600" />
-              </div>
-              <p className="text-sm text-neutral-600">Active Customers</p>
-              <p className="text-lg font-bold text-neutral-900">
-                {stats.activeCustomers}
-              </p>
-            </Card>
-            
-            <Card className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <TrendingUp className="w-5 h-5 text-neutral-600" />
-              </div>
-              <p className="text-sm text-neutral-600">Avg Order Value</p>
-              <p className="text-lg font-bold text-neutral-900">
-                ${stats.averageOrderValue.toFixed(2)}
-              </p>
-            </Card>
-          </div>
-
-          {/* Alerts & Status */}
-          <div className="grid grid-cols-1 gap-3">
-            {/* Low Stock Alert */}
-            {stats.lowStockItems > 0 && (
-              <Card 
-                className="bg-red-50 border-red-200 cursor-pointer"
-                onClick={() => router.push('/manager/inventory?filter=low-stock')}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <AlertTriangle className="w-6 h-6 text-red-600" />
-                    <div>
-                      <p className="font-medium text-red-800">Low Stock Alert</p>
-                      <p className="text-sm text-red-600">
-                        {stats.lowStockItems} items need restocking
-                      </p>
-                    </div>
-                  </div>
-                  <Badge variant="danger" size="sm">
-                    {stats.lowStockItems}
-                  </Badge>
-                </div>
-              </Card>
-            )}
+           
 
             {/* Kitchen Status */}
             <Card>
