@@ -511,7 +511,7 @@ useEffect(() => {
                 Get the latest howls about new menu items!
               </p>
               <Button className="bg-gradient-to-r from-secondary-500 to-primary-500 text-white font-black rounded-xl"
-                        onClick={() => router.push('/RegisterForm')}>
+                        onClick={() => router.push('/auth/register')}>
                 SUBSCRIBE
               </Button>
             </div>
