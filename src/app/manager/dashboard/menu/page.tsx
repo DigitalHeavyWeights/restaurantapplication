@@ -312,43 +312,42 @@ export default function ManagerMenuPage() {
             </Badge>
           </div>
 
-          {/* Actions - Compact inline */}
-          <div className="flex items-center space-x-1 flex-shrink-0">
-          {/* Availability Toggle */}
-          <button
-            onClick={() => handleToggleAvailability(item)}
-            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors flex-shrink-0"
-            title={item.isAvailable ? 'Mark as unavailable' : 'Mark as available'}
-          >
-            {item.isAvailable ? (
-              <ToggleRight className="w-5 h-5 text-green-500" />
-            ) : (
-              <ToggleLeft className="w-5 h-5 text-neutral-400" />
-            )}
-          </button>
+        <div className="flex items-center flex-shrink-0">
+{/* Availability Toggle */}
+<button
+  onClick={() => handleToggleAvailability(item)}
+  className="p-1.5 hover:bg-neutral-100 rounded-md transition-colors"
+  title={item.isAvailable ? 'Mark as unavailable' : 'Mark as available'}
+>
+  {item.isAvailable ? (
+    <ToggleRight className="w-4 h-4 text-green-500" />
+  ) : (
+    <ToggleLeft className="w-4 h-4 text-neutral-400" />
+  )}
+</button>
 
-          {/* Edit Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push(`/manager/dashboard/menu/${item.menuItemId}/edit`)}
-            className="p-2 flex-shrink-0"
-            title="Edit item"
-          >
-            <Edit className="w-4 h-4" />
-          </Button>
+{/* Edit Button */}
+<Button
+  variant="ghost"
+  size="sm"
+  onClick={() => router.push(`/manager/dashboard/menu/${item.menuItemId}/edit`)}
+  className="p-1.5 min-w-0"
+  title="Edit item"
+>
+  <Edit className="w-4 h-4" />
+</Button>
 
-          {/* Delete Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => handleDeleteItem(item)}
-            className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
-            title="Delete item"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
+{/* Delete Button */}
+<Button
+  variant="ghost"
+  size="sm"
+  onClick={() => handleDeleteItem(item)}
+  className="p-1.5 text-red-600 hover:text-red-700 hover:bg-red-50 min-w-0"
+  title="Delete item"
+>
+  <Trash2 className="w-4 h-4" />
+</Button>
+</div>
       </div>
     </div>
     </div>
