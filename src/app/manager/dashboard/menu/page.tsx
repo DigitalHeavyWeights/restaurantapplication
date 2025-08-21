@@ -257,94 +257,100 @@ export default function ManagerMenuPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {filteredItems.map((item) => (
-                <Card key={item.menuItemId} padding="md">
-                  <div className="flex items-start space-x-4">
-                    {/* Item Image Placeholder */}
-                    <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">🍽️</span>
-                    </div>
+             
+{filteredItems.map((item) => (
+  <Card key={item.menuItemId} padding="md">
+    <div className="flex items-start space-x-4">
+      {/* Item Image Placeholder */}
+      <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <span className="text-2xl">🍽️</span>
+      </div>
 
-                    {/* Item Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-neutral-900 text-base">
-                            {item.itemName}
-                          </h3>
-                          <p className="text-sm text-neutral-600 line-clamp-2">
-                            {item.description || 'No description available'}
-                          </p>
-                        </div>
-                        <div className="flex items-center space-x-2 ml-2">
-                          <Badge
-                            variant={item.isAvailable ? 'success' : 'danger'}
-                            size="sm"
-                          >
-                            {item.isAvailable ? 'Available' : 'Unavailable'}
-                          </Badge>
-                        </div>
-                      </div>
+      {/* Item Details - Takes full available width */}
+      <div className="flex-1 min-w-0">
+        {/* Title and Badge Row */}
+        <div className="flex items-start justify-between mb-2 gap-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-neutral-900 text-base truncate">
+              {item.itemName}
+            </h3>
+            <p className="text-sm text-neutral-600 line-clamp-2">
+              {item.description || 'No description available'}
+            </p>
+          </div>
+          <Badge
+            variant={item.isAvailable ? 'success' : 'danger'}
+            size="sm"
+            className="flex-shrink-0"
+          >
+            {item.isAvailable ? 'Available' : 'Unavailable'}
+          </Badge>
+        </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-1">
-                            <DollarSign className="w-4 h-4 text-green-600" />
-                            <span className="font-semibold text-green-600">
-                              ${item.price.toFixed(2)}
-                            </span>
-                          </div>
-                          {item.prepTimeMinutes && (
-                            <div className="flex items-center space-x-1">
-                              <Clock className="w-4 h-4 text-neutral-500" />
-                              <span className="text-sm text-neutral-600">
-                                {item.prepTimeMinutes}m
-                              </span>
-                            </div>
-                          )}
-                          <Badge variant="secondary" size="sm">
-                            {item.category}
-                          </Badge>
-                        </div>
+        {/* Price, Time, Category Row */}
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center space-x-3 flex-wrap min-w-0">
+            <div className="flex items-center space-x-1 flex-shrink-0">
+              <DollarSign className="w-4 h-4 text-green-600" />
+              <span className="font-semibold text-green-600">
+                ${item.price.toFixed(2)}
+              </span>
+            </div>
+            {item.prepTimeMinutes && (
+              <div className="flex items-center space-x-1 flex-shrink-0">
+                <Clock className="w-4 h-4 text-neutral-500" />
+                <span className="text-sm text-neutral-600">
+                  {item.prepTimeMinutes}m
+                </span>
+              </div>
+            )}
+            <Badge variant="secondary" size="sm" className="flex-shrink-0">
+              {item.category}
+            </Badge>
+          </div>
+        </div>
 
-                        <div className="flex items-center space-x-2">
-                          {/* Availability Toggle */}
-                          <button
-                            onClick={() => handleToggleAvailability(item)}
-                            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-                          >
-                            {item.isAvailable ? (
-                              <ToggleRight className="w-5 h-5 text-green-500" />
-                            ) : (
-                              <ToggleLeft className="w-5 h-5 text-neutral-400" />
-                            )}
-                          </button>
+        {/* Actions Row - Separate row on mobile for better spacing */}
+        <div className="flex items-center justify-end space-x-1 -mr-2">
+          {/* Availability Toggle */}
+          <button
+            onClick={() => handleToggleAvailability(item)}
+            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors flex-shrink-0"
+            title={item.isAvailable ? 'Mark as unavailable' : 'Mark as available'}
+          >
+            {item.isAvailable ? (
+              <ToggleRight className="w-5 h-5 text-green-500" />
+            ) : (
+              <ToggleLeft className="w-5 h-5 text-neutral-400" />
+            )}
+          </button>
 
-                          {/* Edit Button */}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => router.push(`/manager/dashboard/menu/${item.menuItemId}/edit`)}
-                            className="p-2"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
+          {/* Edit Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push(`/manager/dashboard/menu/${item.menuItemId}/edit`)}
+            className="p-2 flex-shrink-0"
+            title="Edit item"
+          >
+            <Edit className="w-4 h-4" />
+          </Button>
 
-                          {/* Delete Button */}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteItem(item)}
-                            className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
+          {/* Delete Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleDeleteItem(item)}
+            className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
+            title="Delete item"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Card>
+))}
             </div>
           )}
 
