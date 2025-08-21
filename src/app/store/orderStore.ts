@@ -20,6 +20,8 @@ interface OrderState {
   clearError: () => void;
 }
 
+
+
 export const useOrderStore = create<OrderState>((set, get) => ({
   currentOrder: null,
   kitchenQueue: [],
@@ -78,6 +80,7 @@ export const useOrderStore = create<OrderState>((set, get) => ({
     }
   },
 
+  
   loadKitchenQueue: async () => {
     set({ isLoading: true, error: null });
     try {
