@@ -141,8 +141,6 @@ export const RegisterForm: React.FC = () => {
               className="block w-full rounded-xl border-2 border-neutral-200 px-4 py-3 text-base focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 transition-colors"
             >
               <option value="Customer">Customer</option>
-              <option value="Employee">Employee</option>
-              <option value="Manager">Manager</option>
             </select>
           </div>
         </div>
