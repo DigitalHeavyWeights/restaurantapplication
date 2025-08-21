@@ -145,16 +145,18 @@ export default function ManagerMenuPage() {
         <Header 
           title="Menu Management" 
           showBack
-          actions={
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => router.push('/manager/dashboard/menu/create')}
-            >
-              <Plus className="w-4 h-4 mr-1" />
-              Add Item
-            </Button>
-          }
+         actions={
+  <Button
+    variant="primary"
+    size="sm"
+    onClick={() => router.push('/manager/dashboard/menu/create')}
+    className="px-2 py-1 text-xs h-7"
+  >
+    <Plus className="w-3 h-3 mr-1" />
+    <span className="hidden sm:inline">Add Item</span>
+    <span className="sm:hidden">Add</span>
+  </Button>
+}
         />
         
         <div className="p-4 space-y-6">
@@ -258,7 +260,8 @@ export default function ManagerMenuPage() {
           ) : (
             <div className="space-y-3">
              
-{filteredItems.map((item) => (
+
+            {filteredItems.map((item) => (
   <Card key={item.menuItemId} padding="md">
     <div className="flex items-start space-x-4">
       {/* Item Image Placeholder */}
@@ -287,31 +290,30 @@ export default function ManagerMenuPage() {
           </Badge>
         </div>
 
-        {/* Price, Time, Category Row */}
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <div className="flex items-center space-x-3 flex-wrap min-w-0">
+        {/* Price, Time, Category and Actions Row */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center space-x-2 flex-wrap min-w-0 flex-1">
             <div className="flex items-center space-x-1 flex-shrink-0">
               <DollarSign className="w-4 h-4 text-green-600" />
-              <span className="font-semibold text-green-600">
+              <span className="font-semibold text-green-600 text-sm">
                 ${item.price.toFixed(2)}
               </span>
             </div>
             {item.prepTimeMinutes && (
               <div className="flex items-center space-x-1 flex-shrink-0">
                 <Clock className="w-4 h-4 text-neutral-500" />
-                <span className="text-sm text-neutral-600">
+                <span className="text-xs text-neutral-600">
                   {item.prepTimeMinutes}m
                 </span>
               </div>
             )}
-            <Badge variant="secondary" size="sm" className="flex-shrink-0">
+            <Badge variant="secondary" size="sm" className="flex-shrink-0 text-xs">
               {item.category}
             </Badge>
           </div>
-        </div>
 
-        {/* Actions Row - Separate row on mobile for better spacing */}
-        <div className="flex items-center justify-end space-x-1 -mr-2">
+          {/* Actions - Compact inline */}
+          <div className="flex items-center space-x-1 flex-shrink-0">
           {/* Availability Toggle */}
           <button
             onClick={() => handleToggleAvailability(item)}
@@ -349,12 +351,12 @@ export default function ManagerMenuPage() {
         </div>
       </div>
     </div>
+    </div>
   </Card>
-))}
-            </div>
-          )}
-
-          {/* Quick Actions */}
+))} 
+       </div>   
+          
+)}{/* Quick Actions */}
           <Card>
             <h3 className="text-lg font-semibold text-neutral-900 mb-4">Quick Actions</h3>
             <div className="grid grid-cols-2 gap-3">
