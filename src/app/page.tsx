@@ -200,13 +200,14 @@ useEffect(() => {
   </div>
 </div>
 
+{/* 
+TODAY'S SPECIAL - Compact Pack Attack Style 
 
-{/* TODAY'S SPECIAL - Compact Pack Attack Style */}
 <div className="py-12 xl:py-18">
   <div className="max-w-screen-xl xl:max-w-screen-2xl mx-auto px-4 lg:px-8">
     <div className="relative overflow-hidden rounded-2xl xl:rounded-3xl shadow-xl border-4 xl:border-8 border-accent-400">
       
-      {/* Background Image Overlay */}
+      Background Image Overlay
       <div 
         className="absolute inset-0 bg-center bg-no-repeat"
         style={{
@@ -215,10 +216,10 @@ useEffect(() => {
         }}
       />
       
-      {/* Subtle black overlay for text readability */}
+      Subtle black overlay for text readability
       <div className="absolute inset-0 bg-black/20" />
       
-      {/* Simplified Background Elements */}
+      Simplified Background Elements
       <div className="absolute inset-0">
         <div className="absolute bottom-6 left-6 text-4xl opacity-20 animate-bounce">🍟</div>
         <div className="absolute top-6 right-6 text-4xl opacity-20">🎉</div>
@@ -228,10 +229,10 @@ useEffect(() => {
         
         <div className="grid lg:grid-cols-3 gap-6 xl:gap-12 items-center xl:min-h-[500px]">
           
-          {/* Left: Main Content */}
+          Left: Main Content
           <div className="lg:col-span-2 text-white space-y-4">
             
-            {/* Header with Badge and Pricing in One Line */}
+            Header with Badge and Pricing in One Line
             <div className="flex flex-wrap items-center gap-4 mb-4">
               <div className="inline-flex items-center bg-gradient-to-r from-accent-400 to-accent-300 text-brand-black px-4 py-2 rounded-full shadow-lg border-2 border-white">
                 <Crown className="w-4 h-4 mr-2" />
@@ -251,17 +252,17 @@ useEffect(() => {
               </div>
             </div>
             
-            {/* Compact Headline */}
+            Compact Headline
             <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-black leading-tight drop-shadow-2xl">
               THE PACK ATTACK FEAST
             </h2>
             
-            {/* Subtitle */}
+            Subtitle
             <p className="text-lg md:text-xl xl:text-2xl font-bold text-accent-100 drop-shadow-lg mb-4">
               The ultimate combo that feeds the whole pack!
             </p>
             
-            {/* Compact Menu Items - Horizontal Layout */}
+            Compact Menu Items - Horizontal Layout
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 xl:gap-4 text-sm md:text-base xl:text-lg font-bold">
               <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg p-2">
                 <span className="text-2xl">🍔</span>
@@ -294,7 +295,7 @@ useEffect(() => {
             </div>
           </div>
          
-          {/* Right: Single Image */}
+          Right: Single Image
           <div className="relative text-center">
             <div className="relative inline-block group">
               <div className="w-48 h-48 lg:w-56 lg:h-56 xl:w-72 xl:h-72 mx-auto bg-gradient-to-br from-accent-400 via-accent-300 to-accent-200 rounded-2xl p-6 xl:p-8 shadow-xl border-4 xl:border-6 border-white hover:scale-105 transition-transform backdrop-blur-sm">
@@ -313,13 +314,13 @@ useEffect(() => {
                 </div>
               </div>
               
-              {/* Single Floating Badge */}
+              Single Floating Badge
               <div className="absolute -top-3 -right-3 bg-accent-400/90 backdrop-blur-sm text-brand-black px-3 py-1 rounded-full font-black text-sm border-2 border-white shadow-lg">
                 HOT & FRESH!
               </div>
             </div>
             
-            {/* Compact Rating */}
+            Compact Rating
             <div className="mt-4 inline-flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/30">
               <div className="flex space-x-1 mr-2">
                 {[1,2,3,4,5].map((i) => (
@@ -334,6 +335,8 @@ useEffect(() => {
     </div>
   </div>
 </div>
+*/}
+
 
   {/* Menu Carousel Section */}
 <div className="py-24 relative">
