@@ -141,7 +141,7 @@ export default function ManagerMenuPage() {
 
   return (
     <ProtectedRoute requiredRoles={['Manager']}>
-      <div className="pb-20">
+      <div className="pb-28">
         <Header 
           title="Menu Management" 
           showBack
