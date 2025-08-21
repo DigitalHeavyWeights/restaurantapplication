@@ -444,21 +444,7 @@ TODAY'S SPECIAL - Compact Pack Attack Style
             <span className="text-lg font-bold">Mon-Sun: 11AM - 11PM</span>
           </div>
         </div>
-        <div className="flex space-x-4">
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-secondary-500 to-primary-500 text-white font-black px-8 py-4 rounded-2xl"
-          >
-            GET DIRECTIONS
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="border-2 border-white text-white hover:bg-white hover:text-neutral-900 font-black px-8 py-4 rounded-2xl"
-          >
-            CALL THE PACK
-          </Button>
-        </div>
+     
       </div>
       <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
         <h3 className="text-2xl font-black text-neutral-900 mb-6">PACK HOURS</h3>
