@@ -51,7 +51,7 @@ export default function CartPage() {
   if (totalItems === 0) {
     return (
       <ProtectedRoute requiredRoles={['Customer']}>
-        <div className="pb-20">
+        <div className="pb-28">
           <Header title="Shopping Cart" showBack />
           <div className="p-4 text-center py-12">
             <ShoppingCart className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
@@ -68,7 +68,7 @@ export default function CartPage() {
 
   return (
     <ProtectedRoute requiredRoles={['Customer']}>
-      <div className="pb-20">
+      <div className="pb-28">
         <Header title={`Cart (${totalItems} item${totalItems !== 1 ? 's' : ''})`} showBack />
         
         <div className="p-4 space-y-4">

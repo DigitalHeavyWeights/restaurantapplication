@@ -124,7 +124,7 @@ export default function CheckoutPage() {
 
   return (
     <ProtectedRoute requiredRoles={['Customer']}>
-      <div className="pb-20">
+      <div className="pb-28">
         <Header title="Checkout" showBack />
         
         <div className="p-4 space-y-6">
