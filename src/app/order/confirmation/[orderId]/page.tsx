@@ -40,7 +40,7 @@ export default function OrderConfirmationPage() {
 
   if (!order) {
     return (
-      <div className="pb-20">
+      <div className="pb-28">
         <Header title="Order Not Found" showBack />
         <div className="p-4 text-center py-12">
           <div className="text-4xl mb-3">❌</div>
@@ -55,7 +55,7 @@ export default function OrderConfirmationPage() {
   }
 
   return (
-    <div className="pb-20">
+    <div className="pb-28">
       <Header title="Order Confirmation" showBack={false} />
       
       <div className="p-4 space-y-6">
