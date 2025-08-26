@@ -302,6 +302,11 @@ async updateMenu(menuId: number, menuData: {
   await this.client.put(`/menu/${menuId}`, menuData);
 }
 
+// Delete menu
+async deleteMenu(menuId: number): Promise<void> {
+  await this.client.delete(`/menu/${menuId}`);
+}
+
 //sales analytics 
 
 async getSalesAnalytics(days: number = 7): Promise<{
@@ -445,6 +450,9 @@ async cancelDelivery(deliveryId: string): Promise<{ success: boolean }> {
   const response = await this.client.delete(`/delivery/cancel/${deliveryId}`);
   return response.data;
 }
+
+
+
 
 
 }

@@ -58,6 +58,15 @@ export default function ManagerDashboard() {
       action: () => router.push('/manager/menu/new'),
       color: 'bg-blue-500'
     },
+
+     {
+    icon: ChefHat, // or use Menu icon
+    label: 'Manage Menus',
+    description: 'Create & edit menus',
+    action: () => router.push('/manager/dashboard/menus'),
+    color: 'bg-orange-500'
+  },
+
     {
       icon: Package,
       label: 'Check Inventory',
