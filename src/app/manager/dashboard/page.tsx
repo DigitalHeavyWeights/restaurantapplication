@@ -92,7 +92,7 @@ export default function ManagerDashboard() {
 
   return (
     <ProtectedRoute requiredRoles={['Manager']}>
-      <div className="pb-20">
+      <div className="pb-28">
         <Header 
           title="Manager Dashboard" 
         />

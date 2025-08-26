@@ -382,7 +382,7 @@ export default function ManagerMenuPage() {
                 className="h-12"
               >
                 <Filter className="w-4 h-4 mr-2" />
-                Manage Categories
+                Manage Menus
               </Button>
               
             </div>

@@ -63,7 +63,7 @@ export default function CreateMenuPage() {
 
   return (
     <ProtectedRoute requiredRoles={['Manager']}>
-      <div className="pb-20">
+      <div className="pb-28">
         <Header 
           title="Create Menu" 
           showBack
