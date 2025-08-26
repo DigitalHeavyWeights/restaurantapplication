@@ -477,15 +477,6 @@ TODAY'S SPECIAL - Compact Pack Attack Style
             </div>
             
             <div>
-              <h4 className="text-lg font-black mb-4">QUICK LINKS</h4>
-              <div className="space-y-2">
-                <a href="/menu" className="block text-neutral-400 hover:text-white font-medium">Menu</a>
-                <a href="/locations" className="block text-neutral-400 hover:text-white font-medium">Locations</a>
-                <a href="/contact" className="block text-neutral-400 hover:text-white font-medium">Contact</a>
-              </div>
-            </div>
-            
-            <div>
               <h4 className="text-lg font-black mb-4">FOLLOW THE PACK</h4>
               <div className="flex space-x-4">
                 <Instagram className="w-6 h-6 text-neutral-400 hover:text-white cursor-pointer" />
