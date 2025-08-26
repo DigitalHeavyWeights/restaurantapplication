@@ -375,6 +375,16 @@ export default function ManagerMenuPage() {
                 <Filter className="w-4 h-4 mr-2" />
                 Manage Categories
               </Button>
+
+               <Button
+                variant="outline"
+                onClick={() => router.push('/manager/dashboard/menus/create')}
+                className="h-12"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Manage Categories
+              </Button>
+              
             </div>
           </Card>
         </div>
